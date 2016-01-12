@@ -42,7 +42,7 @@
 
 			ajax = new XMLHttpRequest();
 			ajax.onload = onLoginResult;
-			ajax.open('post', 'http://localhost/labz/simplon/php_exemples/login_ajax/login.php', true);
+			ajax.open('post', 'login.php', true);
 			ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			ajax.send("identifiant=" + identifiant + "&mot_passe=" + pass);
 		}

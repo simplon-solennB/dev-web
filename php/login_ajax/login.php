@@ -1,5 +1,4 @@
 <?php
-header( "Access-Control-Allow-Origin: http://localhost:63342" );
 
 define( "LOGIN", "toto" );
 define( "PASS", "toto" );
