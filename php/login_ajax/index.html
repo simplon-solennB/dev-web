@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>Identification</title>
+	<link rel="stylesheet" href="../base.css"/>
+	<style>
+		#login-box {
+			position: relative;
+			top: 40px;
+			width: 300px;
+			margin: 0 auto;
+			text-align: right;
+		}
+
+		.hidden{
+			display: none;
+		}
+	</style>
+
+	<script>
+		var ajax;
+
+		function onLoginResult(event){
+			console.log('onLoginResult', event.target.responseText);
+			var result = JSON.parse( event.target.responseText )
+			if( result.status === 1 ){
+				byId('errorMsg').style.display = 'none';
+				document.body.removeChild(byId('login-box'));
+
+				byId('home-page').style.display = 'block';
+				var username = document.createTextNode(result.username);
+				byId('chp-welcome').appendChild(username);
+			} else {
+				byId('errorMsg').style.display = 'block';
+			}
+		}
+
+		function login(){
+			var identifiant = byId('chpIdentifiant').value;
+			var pass = byId('chpPass').value;
+
+			ajax = new XMLHttpRequest();
+			ajax.onload = onLoginResult;
+			ajax.open('post', 'http://localhost/labz/simplon/php_exemples/login_ajax/login.php', true);
+			ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			ajax.send("identifiant=" + identifiant + "&mot_passe=" + pass);
+		}
+	</script>
+</head>
+<body>
+
+
+<div id="login-box">
+	<p id="errorMsg" class="error hidden">Erreur d'identification</p>
+	<form id="login-form">
+		<div>
+			<label for="chpIdentifiant">Identifiant</label>
+			<input id="chpIdentifiant" type="text" name="identifiant"/>
+		</div>
+		<div>
+			<label for="chpPass">Mot de passe</label>
+			<input id="chpPass" type="text" name="mot_passe"/>
+		</div>
+		<button type="button" onclick="login()">Entrer</button>
+	</form>
+</div>
+
+<div id="home-page" class="hidden">
+	<h1 id="chp-welcome">Bienvenue </h1>
+</div>
+
+<script src="lib.js"></script>
+</body>
+</html>
