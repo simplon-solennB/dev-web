@@ -6,14 +6,14 @@ if ( isset( $_GET[ 'logout' ] ) && $_GET[ 'logout' ] == 1 ) {
     session_destroy();
 }
 
-if ( !isset( $_SESSION[ 'count' ] ) )
-    $_SESSION[ 'count' ] = 0;
+if ( !isset( $_SESSION[ 'compteur' ] ) )
+    $_SESSION[ 'compteur' ] = 0;
 
 if ( isset( $_POST[ 'visitor' ] ) )
     $_SESSION[ 'visitor' ] = $_POST[ 'visitor' ];
 
 if ( isset( $_SESSION[ 'visitor' ] ) ) {
-    $_SESSION[ 'count' ] += 1;
+    $_SESSION[ 'compteur' ] += 1;
     echo "<h1>Hola " . $_SESSION[ 'visitor' ] . "</h1>";
 
 } else {
@@ -25,6 +25,6 @@ if ( isset( $_SESSION[ 'visitor' ] ) ) {
     </form>
 <?php } ?>
 
-<div>Nombre de vues : <?php echo $_SESSION[ 'count' ]; ?></div>
+<div>Nombre de vues : <?php echo $_SESSION[ 'compteur' ]; ?></div>
 
 <a href="<?php echo $_SERVER[ 'PHP_SELF' ]; ?>?logout=1">Initialiser</a>
