@@ -59,3 +59,7 @@ function removeChildren(container) {
         }
     )
 }
+
+function tNode(text){
+    return document.createTextNode(text);
+}

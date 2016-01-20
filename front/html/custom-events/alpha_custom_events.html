@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="fr_FR">
+<head>
+	<meta charset="UTF-8">
+	<title>Utilisation d'évenements personnalisés</title>
+	<link rel="stylesheet" href="../lib/base.css"/>
+	<script type="text/javascript" src="../lib/lib.js"></script>
+	<script type="text/javascript">
+
+		var tasks;
+
+		/*
+		 initialisation de l'application :
+		 + affichage de la liste
+		 + écoute des events 'supprimeItem'
+		 */
+		function init() {
+			tasks = [{id: 112, data: 'pain'}, {id: 117, data: 'beurre'}, {id: 119, data: 'lessive'}];
+			updateList(tasks);
+			addEventListener('supprimeItem', supprimeItem);
+		}
+
+		/*
+		 mise à jour de l'affichage des items de la liste
+		 */
+		function updateList(tasks) {
+			removeChildren(byId('liste'));
+
+			var listItems = tasks.map(getItemList);
+			listItems.forEach(function (item) {
+				byId('liste').appendChild(item);
+			});
+		}
+
+		/*
+		 renvoie un element li basé sur un objet tâche
+		 */
+		function getItemList(item) {
+			var li = document.createElement('li');
+			li.appendChild(tNode(item.data));
+			li.setAttribute('data-task-id', item.id);
+			li.addEventListener('click', onListItemClick);
+
+			var btRemove = href('X', "#");
+			btRemove.setAttribute('data-task-id', item.id);
+			btRemove.addEventListener("click", onRemoveClick);
+			li.appendChild(btRemove);
+
+			return li;
+		}
+
+		/*
+		 cherche une tache dans la liste à partir de son id
+		 renvoie l'objet trouvé ou null/rien si aucun élement ne correspond
+		 */
+		/**
+		 * écouteur d'evenement de suppression d'item
+		 * @param event
+		 */
+		function supprimeItem(event) {
+			var removedId = event.detail.taskId;
+			console.log('supprimeItem : ', removedId);
+
+			//var removedIndex = getTaskIndex(removedId);
+			var removedIndex = tasks.indexOf(getTaskById(removedId));
+			if( removedIndex >= 0 ){
+				tasks.splice(removedIndex, 1);
+				updateList(tasks);
+			} else
+				console.log("Une erreur s'est produite : tâche introuvable");
+		}
+
+		/*
+		 * renvoie une tâche à partir de son index
+		 * */
+		function getTaskById(searchId){
+			var find ;
+			tasks.forEach(function(item){
+				console.log('getTaskById',searchId, item.id);
+				if( item.id == searchId)
+					find = item;
+			});
+			console.log('finded', find.id);
+			return find;
+		}
+
+		/**
+		 * écouteur
+		 * @param event
+		 */
+		function onListItemClick(event) {
+			console.log('item cliqué : ', event.target.getAttribute('data-task-id'));
+		}
+
+		/**
+		 * au click sur un lien de suppresion » emet un evenement personnalisé 'supprimeItem'
+		 * @param event
+		 */
+		function onRemoveClick(event) {
+			var removedTaskId = event.target.getAttribute('data-task-id');
+			console.log('item supprimé : ', removedTaskId);
+			var rmEvent = new CustomEvent(
+					'supprimeItem',
+					{
+						detail: {taskId: removedTaskId},
+						bubbles: true,
+						cancelable: true
+					}
+			);
+			event.target.dispatchEvent(rmEvent);
+		}
+
+	</script>
+
+</head>
+<body onload="init()">
+
+<div id="container">
+	<ul id="liste" />
+</div>
+
+
+</body>
+</html>
