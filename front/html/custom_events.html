@@ -20,6 +20,9 @@
 		function init() {
 			tasks = [{id: 112, data: 'pain'}, {id: 117, data: 'beurre'}, {id: 119, data: 'lessive'}];
 			updateList(tasks);
+			addEventListener('removeItem', function(event){
+				console.log('removeItem : ', event.detail.taskId);
+			});
 		}
 
 		function updateList(tasks) {
@@ -50,8 +53,17 @@
 		}
 
 		function onRemoveClick(event) {
-			console.log('item supprimé : ', event.target.getAttribute('data-task-id'));
-
+			var removedTaskId = event.target.getAttribute('data-task-id');
+			console.log('item supprimé : ', removedTaskId );
+			var rmEvent = new CustomEvent(
+					'removeItem',
+					{
+						detail: {taskId: removedTaskId},
+						bubbles:true,
+						cancelable:true
+					}
+			);
+			event.target.dispatchEvent(rmEvent);
 		}
 
 	</script>
