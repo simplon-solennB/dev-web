@@ -14,11 +14,11 @@ if ( isset( $_POST[ 'identifiant' ] ) && isset( $_POST[ 'mot_passe' ] ) ) {
         );
         echo json_encode( $result );
     } else
-        echo '{"result":0}';
+        echo '{"status":0}';
 
 } else {
     error_log( 'WARNING ! Paramètres manquants > ip : ' . $_SERVER[ "REMOTE_ADDR" ] );
-    echo '{"result":0}';
+    echo '{"status":0}';
 }
 
 
