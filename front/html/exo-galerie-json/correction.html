@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr_FR">
+<head>
+	<meta charset="UTF-8">
+	<title>Galerie</title>
+	<link rel="stylesheet" href="style.css"/>
+	<script type="text/javascript">
+
+		function init() {
+			loadData();
+		}
+
+		function loadData() {
+			var ajax = new XMLHttpRequest();
+			ajax.onload = onDataLoaded.bind(this);
+			ajax.open('get', 'data.json', true);
+			ajax.send();
+		}
+
+		function onDataLoaded(e) {
+			var data = e.target.responseText;
+			console.log('data', data);
+
+			var galerieData = JSON.parse(data);
+
+			displayTitle(galerieData.titre);
+			displayPhotos(galerieData.photos);
+		}
+
+		function displayTitle(title) {
+			console.log('displayTitle', title);
+			var h1 = document.createElement("h1");
+			h1.textContent = title;
+			document.getElementsByTagName('header')[0].appendChild(h1);
+		}
+
+		function displayPhotos(photos) {
+			console.log('displayPhotos', photos);
+			var photoDivs = photos.map(function (p) {
+				return getPhotoElement(p);
+			});
+			photoDivs.forEach(function (p) {
+				document.getElementById('container').appendChild(p);
+			});
+
+		}
+
+		function getPhotoElement(photo) {
+			var div = document.createElement('div');
+			div.classList.add('photo');
+
+			var h2 = document.createElement('h2');
+			h2.textContent = photo.titre;
+
+			div.appendChild(h2);
+
+			var img = document.createElement('img');
+			img.setAttribute('src', photo.url);
+			div.appendChild(img);
+
+			var desc = document.createElement('p');
+			desc.textContent = photo.description;
+			div.appendChild(desc);
+
+			return div;
+		}
+
+	</script>
+</head>
+<body onload="init()">
+
+<header></header>
+
+<div id="container"></div>
+
+</body>
+</html>
