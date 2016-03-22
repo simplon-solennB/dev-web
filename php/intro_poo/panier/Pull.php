@@ -1,12 +1,15 @@
 <?php
 
 require_once "Produit.php";
+require_once "descriptible.php";
 
 /**
  * Class Pull : permet de définir caractéristiques d'un produit Pull
  */
 class Pull extends Product
 {
+    use Descriptible;
+
     /**
      * couleur
      * @var string
