@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css">
+		html, body {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			font-family: 'Roboto', sans-serif;
+			background: #303030;
+		}
+
+		body {
+			text-align: center;
+			padding-top: 10px;
+		}
+	</style>
+	<script type="text/javascript" src="svg.js"></script>
+	<script type="text/javascript" src="velocity.js"></script>
+	<script type="text/javascript">
+		var s; // element SVG
+
+		const W = 480; // largeur de la scene SVG
+		const H = 320; // hauteur
+
+		const mW = W / 2; // centre largeur
+		const mH = H / 2; // centre hauteur
+
+		/*
+		 * lancement de l'animation
+		 */
+		function anim() {
+
+			// reference l'element svg de la page auprès de SVG.js + attribution taille
+			s = SVG('_svg').width(W).height(H);
+
+			// creation d'un cercle de 1px centré
+			var c = s.circle(1).x(mW).y(mH).fill('#aaa');
+
+			// animation du cercle : grossissement de +3
+			Velocity(
+					c.node,
+					{r: 4},
+					{
+						complete: function () {
+							Velocity(c.node, {r: 0}); // a la fin du grossissement » animation de retrecissement du cercle initial
+							setTimeout(animPoints, 100); // 100ms après début rétrecissement animation des points
+						}
+					}
+			);
+		}
+
+		/*
+		 * animation des points
+		 */
+		function animPoints() {
+			var cs = [0, 1, 2, 3]; // tableau representant 4 "index"
+
+			// creation d'un tableau de cercle svg centrés
+			var pts = cs.map(function (item) {
+				return s.circle(6).x(mW - 3).y(mH - 3).fill('#888');
+			});
+
+			//
+			var dests = [[0, 0], [W, 0], [W, H], [0, H]]; // tableau des positions de destinations des points ( 4 coins )
+			pts.forEach(function (item, index) {
+						console.log(index, item.node.id);
+						Velocity(item.node,
+								{
+									cx: dests[index][0],
+									cy: dests[index][1]
+								},
+								{
+									complete: function () {
+										drawLines();
+										Velocity(item.node, {r: 1});
+									}
+								});
+					}
+			)
+			;
+		}
+
+		function drawLines() {
+			console.log(drawLines);
+
+			var l0 = s.line(0, 0, 1, 0).stroke({color: '#666'});
+			Velocity(l0.node, {x2: 240});
+			var l1 = s.line(480, 0, 479, 0).stroke({color: '#666'});
+			Velocity(l1.node, {x2: 240});
+			var l2 = s.line(0, 320, 1, 320).stroke({color: '#666'});
+			Velocity(l2.node, {x2: 240});
+			var l3 = s.line(480, 320, 479, 320).stroke({color: '#666'});
+			Velocity(l3.node, {x2: 240});
+
+			var l4 = s.line(0, 0, 0, 1).stroke({color: '#666'});
+			Velocity(l4.node, {y2: 110});
+			var l5 = s.line(0, 320, 0, 319).stroke({color: '#666'});
+			Velocity(l5.node, {y2: 110});
+			var l6 = s.line(480, 0, 480, 1).stroke({color: '#666'});
+			Velocity(l6.node, {y2: 110});
+			var l7 = s.line(480, 320, 480, 319).stroke({color: '#666'});
+			Velocity(l7.node, {y2: 110});
+		}
+
+		function bId(elId) {
+			return document.getElementById(elId);
+		}
+
+	</script>
+</head>
+<body onload="anim()">
+
+<div>
+	<svg id="_svg"></svg>
+</div>
+</body>
+</html>
